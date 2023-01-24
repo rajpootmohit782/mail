@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { auth } from "./firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-const Signup = () => {
+const Signin = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState();
-  const [confirmPass, setConfirmPass] = useState();
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -14,19 +15,18 @@ const Signup = () => {
   const handlePass = (e) => {
     setPassword(e.target.value);
   };
-  const handleConfirmPass = (e) => {
-    setConfirmPass(e.target.value);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(email, password);
     // console.log(auth);
-    createUserWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
-        console.log(user.email, "====> sucessfull Signup");
+        console.log(user.email, "====> sucessfull SignIn");
+        navigate("/home");
+
         // ...
       })
       .catch((error) => {
@@ -71,18 +71,7 @@ const Signup = () => {
                   id="exampleInputPassword1"
                 ></input>
               </div>
-              <div className="mb-3">
-                <label htmlFor="exampleConfirmPassword1" className="form-label">
-                  Confirm Password
-                </label>
-                <input
-                  onChange={handleConfirmPass}
-                  value={confirmPass}
-                  type="password"
-                  className="form-control"
-                  id="exampleInputPassword1"
-                ></input>
-              </div>
+
               <div className="mb-3 form-check">
                 <input
                   type="checkbox"
@@ -97,9 +86,9 @@ const Signup = () => {
                 Submit
               </button>
             </form>
-            <h3>
-              Already a memeber <Link to="./signin">Login</Link>
-            </h3>
+            <h2>
+              Already a memeber <Link to="/">SignUp</Link>
+            </h2>
           </div>
         </div>
       </div>
@@ -107,4 +96,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default Signin;
