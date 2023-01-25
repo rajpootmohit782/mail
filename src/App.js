@@ -1,22 +1,37 @@
-import "./styles.css";
-import React, { useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./Home";
+import Emaillist from "./emailList.js/Emaillist";
+import Header from "./header/Header";
+import Sidebar from "./sidebar/Sidebar";
+import { useSelector } from "react-redux";
+import Emaildetails from "./emailList.js/Emaildetails";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { selectedUser } from "./features/userSlice";
 
-import Signup from "./Signup";
-import Signin from "./Signin";
+import "./styles.css";
+import Compose from "./compose/Compose";
+import { selectsendMessageisOpen } from "./features/mailSlice";
+import Login from "./login/Login";
 
 export default function App() {
-  const [loginstate, setLoginState] = useState(false);
+  const isMessageOpen = useSelector(selectsendMessageisOpen);
+  const user = useSelector(selectedUser);
+  //const user = null;
+  console.log(isMessageOpen);
   return (
     <Router>
-      <>
-        <Routes>
-          <Route path="/" element={<Signup />} />
-          <Route path="/signin" element={<Signin />}></Route>
-          <Route path="/home" element={<Home />}></Route>
-        </Routes>
-      </>
+      {user && (
+        <div className="App">
+          <Header />
+          <div className="app__body">
+            <Sidebar />
+            <Routes>
+              <Route exact path="/" element={<Emaillist />} />
+              <Route path="/mail" element={<Emaildetails />} />
+            </Routes>
+          </div>
+          {isMessageOpen && <Compose />}
+        </div>
+      )}{" "}
+      :{<Login />}
     </Router>
   );
 }
